@@ -19,12 +19,13 @@ function App() {
   const startSound = async () => {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    let processorUrl = "processors/VanillaReverb.js";
+    let processorUrl = "processors/VanillaV2Processor.js";
 
     await audioCtx.audioWorklet.addModule(processorUrl);
     source = audioCtx.createMediaStreamSource(input_stream);
 
     const testProcessor = new AudioWorkletNode(audioCtx, "vanilla-reverb");
+    let audio = new Audio("sounds/tech_sound.mp3");
 
     source.connect(testProcessor).connect(audioCtx.destination);
   };
