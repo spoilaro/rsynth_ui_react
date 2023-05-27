@@ -3,7 +3,7 @@ let reverbBuffer,
   readIndex = 0,
   writeIndex = 0;
 
-class ReverbProcessor extends AudioWorkletProcessor {
+class VanillaReverbV2 extends AudioWorkletProcessor {
   static get parameterDescriptors() {
     return [
       {
@@ -49,6 +49,7 @@ class ReverbProcessor extends AudioWorkletProcessor {
 
   // Implement audio processing logic in process function
   process(inputs, outputs, parameters) {
+    console.time("Process");
     const input = inputs[0];
     const output = outputs[0];
     const dry = parameters.dry[0];
@@ -79,9 +80,10 @@ class ReverbProcessor extends AudioWorkletProcessor {
     }
 
     // Return true to indicate that the processor is still active
+    console.timeEnd("Process");
     return true;
   }
 }
 
 // Register the AudioWorkletProcessor
-registerProcessor("vanilla-reverb", ReverbProcessor);
+registerProcessor("vanilla-reverbv2", VanillaReverbV2);

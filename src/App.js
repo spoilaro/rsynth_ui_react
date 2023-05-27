@@ -19,13 +19,26 @@ function App() {
   const startSound = async () => {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    let processorUrl = "processors/VanillaV2Processor.js";
+    //let processorUrl = "processors/VanillaV2Processor.js";
+    let processorUrl = "processors/WasmReverb.js";
 
     await audioCtx.audioWorklet.addModule(processorUrl);
     source = audioCtx.createMediaStreamSource(input_stream);
 
-    const testProcessor = new AudioWorkletNode(audioCtx, "vanilla-reverb");
-    let audio = new Audio("sounds/tech_sound.mp3");
+    //const testProcessor = new AudioWorkletNode(audioCtx, "vanilla-reverbv2");
+    //
+    let testProcessor = new AudioWorkletNode(audioCtx, "wasm-reverb");
+    WebAssembly.compileStreaming(
+      fetch("./processors/pkg/synth_processor_bg.wasm")
+    ).then((mod) => {
+      testProcessor.port.postMessage(mod);
+    });
+
+    // WebAssembly.compileStreaming(fetch("./processors/pkg/pack_test_bg.wasm")).then(module => {
+    //   // Pass the module to the AudioWorkletProcessor
+    //   testProcessor.port.postMessage({ type: "init-wasm", wasmData: module })
+    // });
+    // let audio = new Audio("sounds/tech_sound.mp3");
 
     source.connect(testProcessor).connect(audioCtx.destination);
   };
