@@ -23,12 +23,24 @@ class WasmReverb extends AudioWorkletProcessor {
   }
 
   process(inputs, outputs) {
-    console.time("Process time");
+    //console.time("Process time");
     if (typeof wasm !== "undefined" && wasm !== null) {
-      let res = wasm.process_audio(3300);
+
+      let input = inputs[0]
+      let output = outputs[0]
+      
+      let input_channel = input[0]
+      let output_channel = output[0]
+
+      let processed_channel = wasm.process_audio(sampleRate, input_channel, output_channel);
+
+      outputs[0][0] = processed_channel
+
+      //console.log(`Output channel: ${input_channel}`)
+      console.log(`OUTPUT: ${processed_channel}`)
     }
 
-    console.timeEnd("Process time");
+    //console.timeEnd("Process time");
     return true;
   }
 }
