@@ -23,14 +23,12 @@ class WasmReverb extends AudioWorkletProcessor {
   }
 
   process(inputs, outputs) {
-    console.time("Process");
+    console.time("Process time");
     if (typeof wasm !== "undefined" && wasm !== null) {
       let res = wasm.process_audio(3300);
-
-      console.log(res);
     }
 
-    console.timeEnd("Process");
+    console.timeEnd("Process time");
     return true;
   }
 }
